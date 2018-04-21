@@ -1,0 +1,360 @@
+if ("undefined" == typeof YZP || !YZP) window.YZP = {};
+
+YZP.version = "20150406";
+//工具方法
+YZP.utils = YZP._ = {};
+/**
+ * Debounce function
+ * @param {function} func  Function to be debounced
+ * @param {number} wait Function execution threshold in milliseconds
+ * @param {bool} immediate  Whether the function should be called at
+ *                          the beginning of the delay instead of the
+ *                          end. Default is false.
+ * @desc Executes a function when it stops being invoked for n seconds
+ * @via  _.debounce() http://underscorejs.org
+ */
+YZP.utils.debounce = function(fn, delay) {
+	var timer = null; // 声明计时器
+	return function() {
+		var context = this,
+			args = arguments;
+		clearTimeout(timer);
+		timer = setTimeout(function() {
+			fn.apply(context, args);
+		}, delay);
+	};
+};
+
+/**
+ * [loadJS description]
+ * @param  {[type]}   url      [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+YZP.loadJS = function(url, callback) {
+	var script = document.createElement('script');
+	script.src = url;
+	script.onload = script.onerror = script.onreadystatechange = function() {
+		if (/loaded|complete|undefined/.test(script.readyState)) {
+			script.onload = script.onerror = script.onreadystatechange = null;
+			if (callback) callback.call();
+			script = null;
+		}
+	};
+	document.body.appendChild(script);
+}
+
+YZP.countdown = {
+	loop: function(o) {
+		var _this = this;
+		setTimeout(function() {
+			_this.init(o)
+		}, 1000)
+	},
+	wait: 60,
+	init: function(o) {
+		var _this = this;
+		if (_this.wait == 0) {
+			o.removeAttr("disabled");
+			o.val("发送验证码");
+			_this.wait = 60;
+		} else {
+			o.attr("disabled", true);
+			o.val("重发(" + _this.wait + ")");
+			_this.wait--;
+			_this.loop(o);
+		}
+	},
+	stop: function() {
+		this.wait = 0;
+	}
+}
+
+/**
+ * [template 模板格式化方法]
+ * @param  {[string]} templ [模板]
+ * @param  {[json,array]} json     [需要填充的json]
+ * @return {[string]}          [拼接后的模板]
+ */
+YZP.template = function(templ, json) {
+		return templ.replace(/{{(.*?)}}/g, function(all, key) {
+			return json && (key in json) ? json[key] : "";
+		});
+	}
+	/**
+	 * 数据区块
+	 */
+
+YZP.t = {
+	"alert": '<div id="fn-alert">{{text}}</div>'
+}
+
+YZP.alert_timeout = null;
+
+YZP.closeAlert = function() {
+	clearTimeout(YZP.alert_timeout);
+	$("#fn-alert").hide(200);
+
+}
+YZP.alert = function(text, delay) {
+	clearTimeout(YZP.alert_timeout);
+	var ealert = $("#fn-alert");
+	var html = "";
+	if (ealert.length == 0) {
+		html = YZP.template(YZP.t["alert"], {
+			"text": text
+		});
+		$("body").append(html);
+	} else {
+		ealert.html(text).show(200);
+	}
+	YZP.alert_timeout = setTimeout(function() {
+		$("#fn-alert").hide(200);
+	}, delay || 4500)
+}
+
+/* jquery cookie */
+jQuery.cookie = function(name, value, options) {
+	if (typeof value != 'undefined') {
+		options = options || {};
+		if (value === null) {
+			value = '';
+			options.expires = -1;
+		}
+		var expires = '';
+		if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {
+			var date;
+			if (typeof options.expires == 'number') {
+				date = new Date();
+				date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
+			} else {
+				date = options.expires;
+			}
+			expires = '; expires=' + date.toUTCString();
+		}
+		var path = options.path ? '; path=' + options.path : '; path=/';
+		var domain = options.domain ? '; domain=' + options.domain : '';
+		var secure = options.secure ? '; secure' : '';
+		document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');
+	} else {
+		var cookieValue = null;
+		if (document.cookie && document.cookie != '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+				if (cookie.substring(0, name.length + 1) == (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+};
+
+//IE下模拟html5 placeholder效果
+(function($) {
+	var Placeholder = function(t, o) {
+		this.target = t;
+		this.settings = o;
+		this.init();
+	}
+	Placeholder.prototype.init = function() {
+		var that = this,
+			$this = this.target;
+		if ($this && !("placeholder" in document.createElement("input"))) {
+			if (that.settings.placeholder) {
+				var placeholder = that.settings.placeholder;
+			} else
+				var placeholder = $this.attr('placeholder');
+
+			if ($this.val() == '') {
+
+				$this.val(placeholder);
+			}
+			$this.css({
+				color: '#999'
+			});
+			$this.focus(function() {
+				if ($(this).val() == placeholder) {
+					$(this).val('');
+				}
+			})
+			$this.blur(function() {
+				if ($(this).val() == '') {
+					$(this).val(placeholder);
+				}
+			})
+
+		}
+	}
+	$.fn.placeholder = function(o) {
+		var settings = $.extend({
+			placeholder: ''
+		}, o)
+		return this.each(function(index) {
+			var me = $(this);
+
+			return new Placeholder(me, settings);
+		});
+	};
+})(jQuery);
+
+$(document).ready(function() {
+	$('input[placeholder],textarea[placeholder]').placeholder();
+});
+
+
+/**
+ * [公共部分内容]
+ */
+$(function() {
+	//返回顶部
+	var timer;
+	var $float = $("#gotop");
+	$float.on("click", function() {
+		$("html, body").animate({
+			scrollTop: 0
+		}, 120);
+		return false;
+	});
+	$(window).on("scroll", function() {
+		clearTimeout(timer);
+		timer = setTimeout(function() {
+			var st = $(document).scrollTop();
+			(st > 400) ? $float.addClass("js-is-active"): $float.removeClass("js-is-active");
+		}, 0);
+	});
+});
+
+
+$(document).on('click',
+	'[data-stat]',
+	function(e) {
+		var collectDataRuleID = $(this).data('stat');
+		$.post("/Website/DataCollect", {
+				'collectDataRuleID': collectDataRuleID
+			},
+			function(data) {
+				console.log(data)
+			}, "json");
+	})
+
+var geek = function(keys) {
+	var hostname = location.hostname;
+	var keys = keys || [];
+	var count = 0;
+
+	$.each(keys, function(i, n) {
+		if (hostname.indexOf(n) == -1) {
+			count++;
+		}
+	})
+
+	if (count == keys.length) {
+		location.href = '//www.yinzipu.com'
+	}
+}
+
+geek(['yinzipu.com', 'localhost','yzp.com'])
+
+//活动添加
+$(function() {
+	var templ =
+		['<style>.Y_popup.Y_popup_mask{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99;}',
+			'.Y_popup.Y_popup_mask .Y_popup_mask_bg{position:absolute;left:0;top:0;width:100%;height:100%;opacity:.45;filter:alpha(opacity=45);background-color:#000;z-index:1;}',
+			'.Y_popup_row{position:absolute;',
+			'top:10%;height:90%;background:transparent;right:0;left:0;width:800px;max-width:100%;z-index:2;margin:auto;text-align:center;}',
+			'.Y_popup_row .vimg{max-height:100%;max-width:100%;}',
+			'.vimg{-webkit-animation:layer 0.5s cubic-bezier(0.68,-0.55,0.265,1.55);-moz-animation:layer 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);animation:layer 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);}',
+			'@-webkit-keyframes layer{0%{-webkit-transform:translate(0,-100%) translateZ(0);}',
+			'100%{-webkit-transform:translate(0,0) translateZ(0);}}',
+			'@-moz-keyframes layer{0%{-moz-transform:translate(0,-100%) translateZ(0);}',
+			'100%{-moz-transform:translate(0,0) translateZ(0);}}',
+			'@keyframes layer{0%{transform:translate(0,-100%) translateZ(0);}',
+			'100%{transform:translate(0,0) translateZ(0);}}',
+			'#homeLayer.shrink{-webkit-transition:0.55s;-moz-transition:0.55s;transition:0.55s;position:fixed;width:120px;height:120px;right:0;bottom:340px;left:auto;top:auto;overflow:hidden;}',
+			'#homeLayer .Y_popup_mask_bg,#homeLayer.shrink .Y_popup_row{-webkit-transition:0.55s;-moz-transition:0.55s;transition:0.55s;}',
+			'#homeLayer.shrink .homeLayer-closed,#homeLayer.shrink .Y_popup_mask_bg{visibility:hidden;opacity:0}',
+			    '.shake{-webkit-animation:shake 0.2s infinite linear;}',
+    '@-webkit-keyframes shake{2%{-webkit-transform:translate(-.5px,.5px) rotate(-.5deg) }',
+    '4%{-webkit-transform:translate(2.5px,.5px) rotate(-.5deg) }',
+    '6%{-webkit-transform:translate(-.5px,1.5px) rotate(1.5deg) }',
+    '8%{-webkit-transform:translate(.5px,.5px) rotate(-.5deg) }',
+    '10%{-webkit-transform:translate(-.5px,-1.5px) rotate(-.5deg) }',
+    '12%{-webkit-transform:translate(.5px,-.5px) rotate(1.5deg) }',
+    '14%{-webkit-transform:translate(1.5px,2.5px) rotate(-.5deg) }',
+    '16%{-webkit-transform:translate(-.5px,-.5px) rotate(.5deg) }',
+    '18%{-webkit-transform:translate(2.5px,.5px) rotate(.5deg) }',
+    '20%{-webkit-transform:translate(.5px,-1.5px) rotate(-.5deg) }',
+    '22%{-webkit-transform:translate(2.5px,2.5px) rotate(-.5deg) }',
+    '24%{-webkit-transform:translate(2.5px,1.5px) rotate(1.5deg) }',
+    '26%{-webkit-transform:translate(.5px,1.5px) rotate(-.5deg) }',
+    '28%{-webkit-transform:translate(1.5px,.5px) rotate(.5deg) }',
+    '30%{-webkit-transform:translate(-1.5px,2.5px) rotate(1.5deg) }',
+    '32%{-webkit-transform:translate(.5px,.5px) rotate(.5deg) }',
+    '34%{-webkit-transform:translate(.5px,1.5px) rotate(1.5deg) }',
+    '36%{-webkit-transform:translate(2.5px,-.5px) rotate(1.5deg) }',
+    '38%{-webkit-transform:translate(.5px,1.5px) rotate(1.5deg) }',
+    '40%{-webkit-transform:translate(2.5px,1.5px) rotate(1.5deg) }',
+    '42%{-webkit-transform:translate(2.5px,-1.5px) rotate(.5deg) }',
+    '44%{-webkit-transform:translate(.5px,-.5px) rotate(.5deg) }',
+    '46%{-webkit-transform:translate(1.5px,-1.5px) rotate(.5deg) }',
+    '48%{-webkit-transform:translate(-1.5px,-.5px) rotate(.5deg) }',
+    '50%{-webkit-transform:translate(2.5px,-1.5px) rotate(1.5deg) }',
+    '52%{-webkit-transform:translate(.5px,1.5px) rotate(.5deg) }',
+    '54%{-webkit-transform:translate(2.5px,-.5px) rotate(.5deg) }',
+    '56%{-webkit-transform:translate(2.5px,2.5px) rotate(.5deg) }',
+    '58%{-webkit-transform:translate(2.5px,1.5px) rotate(-.5deg) }',
+    '60%{-webkit-transform:translate(1.5px,1.5px) rotate(-.5deg) }',
+    '62%{-webkit-transform:translate(-.5px,.5px) rotate(-.5deg) }',
+    '64%{-webkit-transform:translate(2.5px,1.5px) rotate(-.5deg) }',
+    '66%{-webkit-transform:translate(-1.5px,.5px) rotate(1.5deg) }',
+    '68%{-webkit-transform:translate(1.5px,-1.5px) rotate(.5deg) }',
+    '70%{-webkit-transform:translate(.5px,.5px) rotate(-.5deg) }',
+    '72%{-webkit-transform:translate(-.5px,1.5px) rotate(1.5deg) }',
+    '74%{-webkit-transform:translate(-1.5px,1.5px) rotate(1.5deg) }',
+    '76%{-webkit-transform:translate(2.5px,-.5px) rotate(.5deg) }',
+    '78%{-webkit-transform:translate(2.5px,2.5px) rotate(.5deg) }',
+    '80%{-webkit-transform:translate(-1.5px,2.5px) rotate(.5deg) }',
+    '82%{-webkit-transform:translate(-1.5px,-.5px) rotate(.5deg) }',
+    '84%{-webkit-transform:translate(.5px,1.5px) rotate(-.5deg) }',
+    '86%{-webkit-transform:translate(-.5px,2.5px) rotate(.5deg) }',
+    '88%{-webkit-transform:translate(2.5px,2.5px) rotate(1.5deg) }',
+    '90%{-webkit-transform:translate(-.5px,-1.5px) rotate(-.5deg) }',
+    '92%{-webkit-transform:translate(1.5px,.5px) rotate(.5deg) }',
+    '94%{-webkit-transform:translate(-.5px,-.5px) rotate(.5deg) }',
+    '96%{-webkit-transform:translate(1.5px,.5px) rotate(1.5deg) }',
+    '98%{-webkit-transform:translate(.5px,-.5px) rotate(1.5deg) }',
+    '0,100%{-webkit-transform:translate(0,0) rotate(0) }}',
+			'.homeLayer-closed{position: absolute;right:20px;z-index:5;top:20px;}</style>',
+			'<div id="homeLayer" class="Y_popup Y_popup_mask" style="display: none;" >',
+			'	<div class="Y_popup_mask_bg"></div>',
+			'	<a href="javascript:" id="homeLayer-closed" class="homeLayer-closed fn-closed">',
+			'			<img src="//assets.yinzipu.com/www/img/homeLayer-close.png" alt="">',
+			'	</a>',
+			'	<div class="Y_popup_row">',
+			'		<a href="//www.yinzipu.com/MemberSystem/Coupon" class="fn-open">',
+			'			<img src="//assets.yinzipu.com/www/img/rp.png" alt="" class="vimg" id="vimg">',
+			'		</a>',
+			'	</div>',
+			'</div>'
+		].join("");
+
+	//首页 弹屏
+	if ($.cookie('HasActivity') && $.cookie('HasActivity')=='True') {
+			$('body').append(templ);
+		 $("#homeLayer").show();
+	} 
+
+  $(document).on('click', '.fn-closed,.Y_popup_mask_bg', function(e) {
+		$.cookie('HasActivity',"False",{domain:'.yinzipu.com'})
+		$("#homeLayer").hide();
+	})
+
+	$(document).on('click', '.fn-open', function(e) {
+		$.cookie('HasActivity',"False",{domain:'.yinzipu.com'})
+		$("#vimg").addClass('shake');
+	})
+
+})

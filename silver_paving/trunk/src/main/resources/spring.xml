@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--<import resource="spring-shiro.xml"/>-->
+    <import resource="spring-redis.xml"/>
+    <import resource="spring-shiro.xml"/>
+    <import resource="freemarker-spring.cfg.xml"/>
+    <import resource="spring-quartz.xml"/>
+
+    <!--context:annotation-config配置会是spring加载注解解析器。使xml和注解混合配制中的注解生效-->
+    <context:annotation-config/>
+    <!--component-scan默认有annotation-config配置，所以可以省略annotation-config配置-->
+    <!--如果两个配置都有，以component-scan中的annotation-config为主-->
+    <context:component-scan base-package="com.ten_thousand.silver_paving"/>
+
+    <!--default-servlet-handler用来过滤静态资源（html,图片,css,js等），将静态资源交给原生Web容器自己处理-->
+    <mvc:default-servlet-handler/>
+    <!--mvc:annotation-driven与上面一个监听器功能类似：将静态资源交给Web容器管理后可能会出现某些注解失效的情况-->
+    <mvc:annotation-driven/>
+
+    <!--引入properties文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--配置连接池对象-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${driver}"/>
+        <property name="jdbcUrl" value="${url}"/>
+        <property name="user" value="${user}"/>
+        <property name="password" value="${password}"/>
+    </bean>
+    <!--mybatis sessionFactory-->
+    <bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--数据源，，连接池对象-->
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis.cfg.xml"/>
+    </bean>
+
+    <!--配置spring对mybatis的事务的管理-->
+    <bean id="transactionManager1" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager1"/>
+
+    <!--&lt;!&ndash; 自动扫描mapper,允许自动注入(根据类型匹配),不需要逐个配置mapper &ndash;&gt;-->
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+        <!--<property name="basePackage" value="com.ten_thousand.silver_paving.dao"/>-->
+    <!--</bean>-->
+
+
+</beans>

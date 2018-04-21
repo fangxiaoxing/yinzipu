@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，当前文档的一个标识符-->
+<mapper namespace="com.ten_thousand.silver_paving.dto.hzdto.AdmiMapper">
+    <!--配置开启二级缓存-->
+    <cache/>
+    <!--resultMap结果集的映射-->
+    <!--id是当前resultmap的唯一标识-->
+    <!--type是结果的类型-->
+    <resultMap id="AdmiResultMap" type="com.ten_thousand.silver_paving.dto.hz.Administer">
+        <id property="admiId" column="admi_id" javaType="java.lang.Integer"/>
+        <result property="admiUserName" column="admi_name" javaType="java.lang.String"/>
+        <result property="admiPassword" column="admi_password" javaType="java.lang.String"/>
+        <result property="Salt" column="admi_salt" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="checkadmi" resultMap="AdmiResultMap">
+        SELECT admi_id,admi_name,admi_password,admi_salt
+        FROM tb_admi
+        WHERE admi_name =#{name}
+    </select>
+</mapper>

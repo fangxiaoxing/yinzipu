@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ten_thousand.silver_paving.dto.hzdto.AdmiMapper">
+    <select id="queryRole" resultType="java.lang.String">
+        SELECT r.role_name
+        FROM tb_admi a
+        JOIN tb_role r
+        JOIN tb_ar ar
+        ON a.admi_id= ar.admi_id and  r.role_id=ar.role_id
+        WHERE a.admi_name = #{name}
+    </select>
+
+    <select id="queryPermission" resultType="java.lang.String">
+      SELECT p.permission_name
+      FROM tb_role r
+      JOIN tb_permission p
+      JOIN tb_rp rp
+      ON r.role_id=rp.role_id and p.per_id = rp.per_id
+      WHERE r.rope = #{rolename}
+    </select>
+</mapper>

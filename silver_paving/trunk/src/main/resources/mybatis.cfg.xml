@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+    <plugins>
+        <!-- com.github.pagehelper为PageHelper类所在包名 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!-- 使用下面的方式配置参数，后面会有所有的参数介绍 -->
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
+    <!--mybatis的核心配置-->
+    <!--当前数据环境，，数据来源。 default当前项目采用哪一个数据源-->
+    <!--<environments default="development">-->
+        <!--&lt;!&ndash;&lt;!&ndash;数据源，id是当前数据源的唯一标识&ndash;&gt;&ndash;&gt;-->
+        <!--<environment id="development">-->
+            <!--&lt;!&ndash;采用JDBC默认的事务进行事务的管理&ndash;&gt;-->
+            <!--<transactionManager type="JDBC"/>-->
+            <!--&lt;!&ndash;配置数据源，type表示启用连接池&ndash;&gt;-->
+            <!--<dataSource type="POOLED">-->
+                <!--&lt;!&ndash;<property name="driver" value="com.mysql.jdbc.Driver"/>&ndash;&gt;-->
+                <!--&lt;!&ndash;<property name="url" value="jdbc:mysql://192.168.71.210:3306/yinzipu"/>&ndash;&gt;-->
+                <!--&lt;!&ndash;<property name="username" value="root"/>&ndash;&gt;-->
+                <!--&lt;!&ndash;<property name="password" value="huazhen1992"/>&ndash;&gt;-->
+            <!--</dataSource>-->
+        <!--</environment>-->
+    <!--</environments>-->
+    <mappers>
+        <mapper resource="mapper/admi.mapper.xml"/>
+        <mapper resource="mapper/role_permision.mapper.xml"/>
+        <mapper resource="mapper/borrower.mapper.xml"/>
+        <mapper resource="mapper/car.mapper.xml"/>
+        <mapper resource="mapper/date.mapper.xml"/>
+        <mapper resource="mapper/interest.mapper.xml"/>
+        <mapper resource="mapper/prodintr.mapper.xml"/>
+        <mapper resource="mapper/prodtype.mapper.xml"/>
+        <mapper resource="mapper/production.mapper.xml"/>
+        <mapper resource="mapper/refund.mapper.xml"/>
+        <mapper resource="mapper/risk.mapper.xml"/>
+        <mapper resource="mapper/register.mapper.xml"/>
+        <mapper resource="mapper/investor.mapper.xml"/>
+        <mapper resource="mapper/order.mapper.xml"/>
+    </mappers>
+</configuration>

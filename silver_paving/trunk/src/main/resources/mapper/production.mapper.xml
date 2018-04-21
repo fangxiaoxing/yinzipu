@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ten_thousand.silver_paving.dto.lkc.TbProductionMapper">
+    <resultMap id="TbProductionResultMap" type="com.ten_thousand.silver_paving.dto.lkc.TbProduction">
+        <id property="prodId" column="prod_id" javaType="java.lang.Integer"/>
+        <result property="prodName" column="prod_name" javaType="java.lang.String"/>
+        <result property="prodCode" column="prod_code" javaType="java.lang.String"/>
+        <result property="prodBegin" column="prod_begin" javaType="java.sql.Timestamp"/>
+        <result property="prodEnd" column="prod_end" javaType="java.sql.Timestamp"/>
+        <result property="prodCondition" column="prod_condition" javaType="java.lang.String"/>
+        <result property="prodPrice" column="prod_price" javaType="java.lang.Double"/>
+        <result property="prodGivenNum" column="prod_given_num" javaType="java.lang.Double"/>
+        <result property="prodFroozenNum" column="prod_froozen_num" javaType="java.lang.Double"/>
+        <!--<result property="inteUser" column="inte_user" javaType="com.ten_thousand.silver_paving.dto.lkc.TbInterest"/>-->
+        <!--<result property="dateLength" column="date_length" javaType="com.ten_thousand.silver_paving.dto.lkc.TbDate"/>-->
+        <!--<result property="intrTxt" column="intr_txt" javaType="com.ten_thousand.silver_paving.dto.lkc.TbProdintr"/>-->
+        <!--<result property="prodtype"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbProdtype"/>-->
+        <!--<result property="car"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbCar"/>-->
+        <!--<result property="risk"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbRisk"/>-->
+        <!--与prodtype关系一对一映射配置-->
+        <association property="prodtype"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbProdtype">
+            <id property="prodtypeId" column="prodtype_id" javaType="java.lang.Integer"/>
+            <association property="interest" javaType="com.ten_thousand.silver_paving.dto.lkc.TbInterest">
+                <id property="inteId" column="inte_id" javaType="java.lang.Integer"/>
+                <result property="inteComp" column="inte_comp" javaType="java.lang.Double"/>
+                <result property="inteUser" column="inte_user" javaType="java.lang.Double"/>
+            </association>
+            <association property="date" javaType="com.ten_thousand.silver_paving.dto.lkc.TbDate">
+                <id property="dateId" column="date_id" javaType="java.lang.Integer"/>
+                <result property="dateLength" column="date_length" javaType="java.lang.String"/>
+            </association>
+            <association property="prodintr" javaType="com.ten_thousand.silver_paving.dto.lkc.TbProdintr">
+                <id property="intrId" column="intr_id" javaType="java.lang.Integer"/>
+                <result property="intrTxt" column="intr_txt" javaType="java.lang.String"/>
+            </association>
+            <association property="refund" javaType="com.ten_thousand.silver_paving.dto.lkc.TbRefund">
+                <id property="refundId" column="refund_id" javaType="java.lang.Integer"/>
+                <result property="refundType" column="refund_type" javaType="java.lang.String"/>
+            </association>
+        </association>
+        <!--与car关系配置一对一映射配置-->
+        <association property="car"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbCar">
+            <id property="carId" column="car_id" javaType="java.lang.Integer"/>
+            <result property="carBrand" column="car_brand" javaType="java.lang.String"/>
+            <result property="carVersion" column="car_version" javaType="java.lang.String"/>
+            <result property="carType" column="car_type" javaType="java.lang.String"/>
+            <result property="carNumber" column="car_number" javaType="java.lang.String"/>
+            <result property="carDate" column="car_date" javaType="java.lang.String"/>
+            <result property="carPrice" column="car_price" javaType="java.lang.Double"/>
+            <result property="carCode" column="car_code" javaType="java.lang.String"/>
+            <result property="carImg1" column="car_img1" javaType="java.lang.String"/>
+            <result property="carImg2" column="car_img2" javaType="java.lang.String"/>
+            <result property="carImg3" column="car_img3" javaType="java.lang.String"/>
+            <result property="carImg4" column="car_img4" javaType="java.lang.String"/>
+            <result property="carCondition" column="car_condition" javaType="java.lang.String"/>
+        </association>
+        <!--与risk关系配置一对一映射配置-->
+        <association property="risk"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbRisk">
+            <id property="riskId" column="risk_id" javaType="java.lang.Integer"/>
+            <result property="riskCheck" column="risk_check" javaType="java.lang.String"/>
+            <result property="riskConclusion" column="risk_conclusion" javaType="java.lang.String"/>
+        </association>
+        <association property="borrower" javaType="com.ten_thousand.silver_paving.dto.lkc.TbBorrower">
+            <id property="borrId" column="borr_id" javaType="java.lang.Integer"/>
+            <result property="borrName" column="borr_name" javaType="java.lang.String"/>
+            <result property="borrIdCard" column="borr_IDCard" javaType="java.lang.String"/>
+            <result property="borrCompany" column="borr_company" javaType="java.lang.String"/>
+            <result property="borrCompCode" column="borr_comp_code" javaType="java.lang.String"/>
+            <result property="borrImg1" column="borr_img1" javaType="java.lang.String"/>
+            <result property="borrImg2" column="borr_img2" javaType="java.lang.String"/>
+            <result property="borrImg3" column="borr_img3" javaType="java.lang.String"/>
+            <result property="borrImg4" column="borr_img4" javaType="java.lang.String"/>
+            <result property="borrImg5" column="borr_img5" javaType="java.lang.String"/>
+            <result property="borrImg6" column="borr_img6" javaType="java.lang.String"/>
+            <result property="borrImg7" column="borr_img7" javaType="java.lang.String"/>
+            <result property="borrImg8" column="borr_img8" javaType="java.lang.String"/>
+            <result property="borrImg9" column="borr_img9" javaType="java.lang.String"/>
+            <result property="carId" column="car_id" javaType="java.lang.Integer"/>
+            <result property="dateId" column="date_id" javaType="java.lang.Integer"/>
+            <result property="borrBegin" column="borr_begin" javaType="java.sql.Timestamp"/>
+            <result property="borrEnd" column="borr_end" javaType="java.sql.Timestamp"/>
+        </association>
+    </resultMap>
+
+<!--sy结果集-->
+    <!--订单详情结果集合-->
+    <resultMap id="orderInfo" type="com.ten_thousand.silver_paving.dto.OrderInfoDto">
+        <id property="prodId" column="prod_id"/>
+        <result property="prodCode" column="prod_code"/>
+        <result property="prodBegin" column="prod_begin"/>
+        <result property="prodEnd" column="prod_end"/>
+        <result property="prodPrice" column="prod_price"/>
+        <result property="prodGivenNum" column="prod_given_num"/>
+        <result property="prodFroozenNum" column="prod_froozen_num"/>
+        <result property="inteUser" column="inte_user"/>
+        <result property="dataLength" column="date_length"/>
+    </resultMap>
+
+    <!--三个额度的结果集-->
+    <resultMap id="orderAmount" type="com.ten_thousand.silver_paving.dto.prodAmountDto">
+        <result property="prodPrice" column="prod_price"/>
+        <result property="prodGivenNum" column="prod_given_num"/>
+        <result property="prodFroozenNum" column="prod_froozen_num"/>
+    </resultMap>
+
+    <!--sy结果集-->
+
+
+    <!--sql添加语句-->
+    <insert id="save" >
+        insert into tb_production(prod_name,prod_code,prod_begin,prod_end,prodCondition,prod_price,prod_given_num,prod_froozen_num,prodtypeId,car_id,risk_id)
+        values(#{prodName},#{prodCode},#{prodBegin},#{prodEnd},#{prodCondition},#{prodPrice},#{prodGivenNum},#{prodFroozenNum},#{prodtypeId},#{carId},#{riskId})
+    </insert>
+    <!--sql删除语句-->
+    <delete id="delete">
+        delete from tb_production where prod_id=#{prodId}
+    </delete>
+    <!--sql更新语句-->
+    <update id="update" >
+        update tb_production set prod_name=#{prodName},prod_code=#{prodCode},prod_begin=#{prodBegin},prod_end=#{prodEnd},prod_condition=#{prodCondition},prod_price=#{prodPrice},
+        prod_given_num=#{prodGivenNum},prod_froozen_num=#{prodFroozenNum},prodtypeId=#{prodtype_id},car_id=#{carId},risk_id=#{riskId}
+        where car_id=#{carId}
+    </update>
+    <!--sql查询语句-->
+    <select id="queryAll" resultMap="TbProductionResultMap">
+        select prod_id,prod_name,prod_code,prod_begin,prod_end,prod_condition,
+        prod_price,prod_given_num,prod_froozen_num,prodtype_id,car_id,risk_id from tb_production
+    </select>
+    <!--根据产品Id查询具体信息-->
+    <select id="queryById" resultType="com.ten_thousand.silver_paving.dto.lkc.TbProduction">
+        select prod_id,prod_name,prod_code,prod_begin,prod_end,prodCondition,
+        prod_price,prod_given_num,prod_froozen_num,prodtypeId,car_id,risk_id from tb_production where prod_id=#{prodId}
+    </select>
+    <!--产品数量-->
+    <select id="queryCount" resultType="java.lang.Integer">
+        select count(prod_id) from tb_production
+    </select>
+    <!--查询产品详情-->
+    <select id="queryProductionInfo" resultMap="TbProductionResultMap">
+        select p.prod_name,p.prod_froozen_num,p.prod_condition,p.prod_given_num,p.prod_price,i.inte_user,d.datelength,pi.intr_txt,c.car_img1,r.risk_check,r.risk_conclusion,re.refund_type
+        from tb_production p join tb_interest i join tb_date d join tb_prodintr join tb_car c join tb_risk r join tb_prodtype pt join tb_refund re
+        on p.prodtype_id=pt.prodtype_id and p.risk_id=r.risk_id and p.car_id=c.car_id and pt.inte_id=i.inte_id
+        and pt.date_id=d.date_id and pt.refund_id=re.refund_id where c.car_id=#{carId}
+    </select>
+    <!--查询产品详情-->
+    <select id="queryAllParams" resultMap="TbProductionResultMap">
+        select p.prod_name,p.prod_froozen_num,p.prod_given_num,p.prod_condition,p.prod_price,i.inte_user,d.date_length,pi.intr_txt,c.car_img1,r.risk_check,r.risk_conclusion,re.refund_type
+        from tb_production p
+        join tb_interest i
+        join tb_date d
+        join tb_prodintr
+        join tb_car c
+        join tb_risk r
+        join tb_prodtype pt
+        join tb_refund re
+        join tb_prodintr pi
+        on p.prodtype_id=pt.prodtype_id
+        and p.risk_id=r.risk_id
+        and p.car_id=c.car_id
+        and pt.inte_id=i.inte_id
+        and pt.date_id=d.date_id
+        and pt.refund_id=re.refund_id
+        and pt.intr_id=pi.intr_id  group by p.prod_name
+    </select>
+    <!--查询单条产品详情-->
+    <select id="queryAllParamsByName" resultMap="TbProductionResultMap">
+        select * from tb_production p
+        join tb_interest i
+        join tb_date d
+        join tb_prodintr
+        join tb_car c
+        join tb_risk r
+        join tb_prodtype pt
+        join tb_refund re
+        join tb_prodintr pi
+        join tb_borrower b
+        on p.prodtype_id=pt.prodtype_id
+        and p.risk_id=r.risk_id
+        and p.car_id=c.car_id
+        and p.borr_id=b.borr_id
+        and pt.inte_id=i.inte_id
+        and pt.date_id=d.date_id
+        and pt.refund_id=re.refund_id
+        and pt.intr_id=pi.intr_id  where p.prod_name=#{prodName} group by p.prod_name
+    </select>
+    <!--查询产品详情,大于15%-->
+    <select id="queryProductionMore15" resultMap="TbProductionResultMap">
+        select p.prod_name,p.prod_froozen_num,p.prod_given_num,p.prod_condition,p.prod_price,i.inte_user,d.date_length,pi.intr_txt,c.car_img1,r.risk_check,r.risk_conclusion,re.refund_type
+        from tb_production p
+        join tb_interest i
+        join tb_date d
+        join tb_prodintr
+        join tb_car c
+        join tb_risk r
+        join tb_prodtype pt
+        join tb_refund re
+        join tb_prodintr pi
+        on p.prodtype_id=pt.prodtype_id
+        and p.risk_id=r.risk_id
+        and p.car_id=c.car_id
+        and pt.inte_id=i.inte_id
+        and pt.date_id=d.date_id
+        and pt.refund_id=re.refund_id
+        and pt.intr_id=pi.intr_id where i.inte_user>=15 and prod_froozen_num !=0 group by p.prod_name
+    </select>
+    <!--查询产品详情——冻结金额不等于0的，招标未满-->
+    <select id="queryProductionNotFull" resultMap="TbProductionResultMap">
+        select p.prod_name,p.prod_froozen_num,p.prod_condition,p.prod_given_num,p.prod_price,i.inte_user,d.date_length,pi.intr_txt,c.car_img1,r.risk_check,r.risk_conclusion,re.refund_type
+        from tb_production p
+        join tb_interest i
+        join tb_date d
+        join tb_prodintr
+        join tb_car c
+        join tb_risk r
+        join tb_prodtype pt
+        join tb_refund re
+        join tb_prodintr pi
+        on p.prodtype_id=pt.prodtype_id
+        and p.risk_id=r.risk_id
+        and p.car_id=c.car_id
+        and pt.inte_id=i.inte_id
+        and pt.date_id=d.date_id
+        and pt.refund_id=re.refund_id
+        and pt.intr_id=pi.intr_id where 15>i.inte_user and p.prod_froozen_num>0 group by p.prod_name
+    </select>
+    <!--查询产品详情——冻结金额等于0的，招标已满-->
+    <select id="queryProductionIsFull" resultMap="TbProductionResultMap">
+        select p.prod_name,p.prod_froozen_num,p.prod_condition,p.prod_given_num,p.prod_price,i.inte_user,d.date_length,pi.intr_txt,c.car_img1,r.risk_check,r.risk_conclusion,re.refund_type
+        from tb_production p
+        join tb_interest i
+        join tb_date d
+        join tb_prodintr
+        join tb_car c
+        join tb_risk r
+        join tb_prodtype pt
+        join tb_refund re
+        join tb_prodintr pi
+        on p.prodtype_id=pt.prodtype_id
+        and p.risk_id=r.risk_id
+        and p.car_id=c.car_id
+        and pt.inte_id=i.inte_id
+        and pt.date_id=d.date_id
+        and pt.refund_id=re.refund_id
+        and pt.intr_id=pi.intr_id where p.prod_froozen_num=0 group by p.prod_name order by i.inte_user desc
+    </select>
+
+    <!--sysql-->
+    <!--查询订单产品输出语句-->
+    <select id="queryOrderInfoByProId" resultMap="orderInfo">
+        SELECT pr.prod_name,pr.prod_code,pr.prod_begin,pr.prod_end,pr.prod_price,pr.prod_given_num,pr.prod_froozen_num,i.inte_user,da.date_length FROM
+        tb_production pr join tb_interest i join tb_date da  join tb_prodtype ty on pr.prodtype_id=ty.prodtype_id and ty.inte_id=i.inte_id and
+        ty.date_id=da.date_id  where pr.prod_id=#{prodId};
+    </select>
+
+    <!--查询余额，总金额，冻结资金额度-->
+    <select id="queryProdAmount" resultMap="orderAmount">
+        SELECT prod_price,prod_given_num,prod_froozen_num from tb_production WHERE prod_id = #{prodId}
+    </select>
+
+    <!--锁定客户预定金额-->
+    <select id="lockFroozenAmount">
+        update tb_production set prod_froozen_num = prod_froozen_num + #{amount} where prod_id = #{prodId};
+    </select>
+
+    <!--解锁客户预定金额-->
+    <select id="unlockFroozenAmount">
+        update tb_production set prod_froozen_num = prod_froozen_num - #{amount} where prod_id = #{prodId};
+    </select>
+
+    <!--付款，增加已付款，减少未付款，按时支付时跳过解锁步骤-->
+    <select id="payOrderToProd">
+        update tb_production set prod_given_num= prod_given_num+#{num1},prod_froozen_num=prod_froozen_num-#{num2} where prod_id = #{prodId};
+    </select>
+
+
+    <!--修改产品状态-->
+    <select id="chageStateOfProduction">
+        update tb_production set prod_condition=#{state} where prod_id =#{prodId} ;
+    </select>
+    <!--sy部分-->
+</mapper>

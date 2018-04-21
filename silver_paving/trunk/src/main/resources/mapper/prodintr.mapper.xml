@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ten_thousand.silver_paving.dto.lkc.TbProdintrMapper">
+    <resultMap id="TbProdintrResultMap" type="com.ten_thousand.silver_paving.dto.lkc.TbProdintr">
+        <id property="prodintrId" column="prodintr_id" javaType="java.lang.Integer"/>
+        <result property="prodintrTxt" column="prodintr_txt" javaType="java.lang.String"/>
+    </resultMap>
+    <!--增添sql-->
+    <insert id="save">
+      insert into tb_prodintr (prodintr_txt) values(#{prodintrTxt})
+    </insert>
+    <!--删除sql-->
+    <delete id="delete">
+      delete from tb_prodintr where prodintr_id=#{prodintrId}
+    </delete>
+    <!--更新sql-->
+    <update id="update">
+      update tb_prodintr set prodintr_txt=#{prodintrTxt}
+    </update>
+    <!--查询sql-->
+    <select id="queryAll" resultMap="TbProdintrResultMap">
+      select prodintr_id,prodintr_txt from tb_prodintr
+    </select>
+    <!--根据产品简介Id查询具体信息-->
+    <select id="queryById" resultType="com.ten_thousand.silver_paving.dto.lkc.TbProdintr">
+        select  prodintr_id,prodintr_txt from tb_prodintr where prodintr_id=#{prodintrId}
+    </select>
+    <!--产品简介数量-->
+    <select id="queryCount" resultType="java.lang.Integer">
+        select count(prodintr_id) from tb_prodintr
+    </select>
+</mapper>

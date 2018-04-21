@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="silver_paving:war">
+    <output-path>$PROJECT_DIR$/silver_paving/trunk/target</output-path>
+    <root id="archive" name="silver_paving.war">
+      <element id="artifact" artifact-name="silver_paving:war exploded" />
+    </root>
+  </artifact>
+</component>

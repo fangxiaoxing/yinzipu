@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--初始化shiro-->
+    <!--处理shiro拦截的过滤器-->
+    <!--注意：id的名称必须和web.xml中的filter-name一样。因为DelegatingFilterProxy过滤器代理是通过filter-name来映射的spring里面的shiroFilter 类-->
+    <bean id="logout" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="/register/exist"/>
+    </bean>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <!--配置系统的登录界面，默认打开login.jsp-->
+        <!--<property name="loginUrl" value="login.jsp"/>-->
+        <!--角色或者权限认证失败的页面-->
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+
+        <!--<property name="filterChainDefinitions">-->
+        <!--<value>-->
+        <!--&lt;!&ndash;拦截规则&ndash;&gt;-->
+        <!--/login.jsp=anon &lt;!&ndash;放行，不做任何限制&ndash;&gt;-->
+        <!--/user/login=anon-->
+        <!--&lt;!&ndash;需要登录并且是CEO角色&ndash;&gt;-->
+        <!--/css/**=anon-->
+        <!--/js/**=anon-->
+        <!--/image/**=anon-->
+        <!--/dist/**=anon-->
+        <!--/vendor/**=anon-->
+        <!--/**=user &lt;!&ndash;全部过滤写在最后，authc需要登录之后才能访问，user需要登录或者获取rememberme的缓存信息也能进入系统&ndash;&gt;-->
+        <!--</value>-->
+        <!--</property>-->
+    </bean>
+
+    <!--cookie配置参数-->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <!-- constructor：创建者的参数 -->
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/><!--避免XSS攻击-->
+        <property name="maxAge" value="1200"/>    <!--失效时间：单位为s -->
+    </bean>
+    <!--用cookie保存用户登录状态的帮助类-->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie" ref="rememberMeCookie" />
+    </bean>
+
+    <!--将UserRealm类交给spring进行管理，管理可以通过注解、xml、和这种方式-->
+    <bean id="admiRealm" class="com.ten_thousand.silver_paving.realm.AdmiRealm"/>
+    <bean id="regRealm" class="com.ten_thousand.silver_paving.realm.RegRealm"/>
+    <bean id="fxRealmAuthenticator" class="com.ten_thousand.silver_paving.realm.FxRealmAuthenticator"/>
+    <!--shiro的SecurityManager-->
+
+    <!--Security Manager交给spring管理，id里配置的值不能随便改动！！！pl：hibernateRealm-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!--完成自定义的realm分发操作-->
+        <property name="authenticator" ref="fxRealmAuthenticator"/>
+        <!--提供自定义的realm完成登录认证-->
+        <property name="realms">
+            <list>
+                <ref bean="regRealm"/>
+                <ref bean="admiRealm"/>
+            </list>
+        </property>
+
+        <!--记住用户功能-->
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+</beans>

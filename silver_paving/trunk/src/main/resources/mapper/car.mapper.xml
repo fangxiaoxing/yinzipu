@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，当前文档的一个标识符-->
+<mapper namespace="com.ten_thousand.silver_paving.dto.lkc.TbCarMapper">
+    <!--resultMap结果集映射-->
+    <!--id是当前resultMap的唯一标识-->
+    <!--type是结果的类型-->
+    <resultMap id="TbCarResultMap" type="com.ten_thousand.silver_paving.dto.lkc.TbCar">
+        <id property="carId" column="car_id" javaType="java.lang.Integer"/>
+        <result property="carBrand" column="car_brand" javaType="java.lang.String"/>
+        <result property="carVersion" column="car_version" javaType="java.lang.String"/>
+        <result property="carType" column="car_type" javaType="java.lang.String"/>
+        <result property="carNumber" column="car_number" javaType="java.lang.String"/>
+        <result property="carDate" column="car_date" javaType="java.lang.String"/>
+        <result property="carPrice" column="car_price" javaType="java.lang.Double"/>
+        <result property="carCode" column="car_code" javaType="java.lang.String"/>
+        <result property="carImg1" column="car_img1" javaType="java.lang.String"/>
+        <result property="carImg2" column="car_img2" javaType="java.lang.String"/>
+        <result property="carImg3" column="car_img3" javaType="java.lang.String"/>
+        <result property="carImg4" column="car_img4" javaType="java.lang.String"/>
+        <result property="carCondition" column="car_condition" javaType="java.lang.String"/>
+    </resultMap>
+
+    <!--sql添加语句-->
+    <insert id="save" >
+        insert into tb_car(car_brand,car_version,car_type,car_number,car_date,car_price,car_code,car_img1,car_img2,car_img3,car_img4,car_condition)
+        values(#{carBrand},#{carVersion},#{carType},#{carNumber},#{carDate},#{carPrice},#{carCode},#{carImg1},#{carImg2},#{carImg3},#{carImg4},#{carCondition})
+    </insert>
+    <!--sql删除语句-->
+    <delete id="delete">
+        delete from tb_car where car_id=#{carId}
+    </delete>
+    <!--sql更新语句-->
+    <update id="update" >
+        update tb_car set car_brand=#{carBrand},car_version=#{carVersion},car_type=#{carType},car_number=#{carNumber},car_date=#{carDate},
+        car_price=#{carPrice},car_code=#{carCode},car_img1=#{carImg1},car_img2=#{carImg2},car_img3=#{carImg3},car_img4=#{carImg4},car_condition=#{carCondition}
+        where car_id=#{carId}
+    </update>
+    <!--sql查询语句-->
+    <select id="queryAll" resultMap="TbCarResultMap">
+        select car_id,car_brand,car_version,car_type,car_number,car_date,car_price,car_code,car_img1,car_img2,car_img3,car_img4,car_condition from tb_car
+    </select>
+    <!--根据车Id查询具体信息-->
+    <select id="queryById" resultType="com.ten_thousand.silver_paving.dto.lkc.TbCar">
+        select car_id,car_brand,car_version,car_type,car_number,car_date,car_price,car_code,
+        car_img1,car_img2,car_img3,car_img4,car_condition from tb_car where car_id=#{carId}
+    </select>
+    <!--车总数-->
+    <select id="queryCount" resultType="java.lang.Integer">
+        select count(car_id) from tb_car
+    </select>
+</mapper>

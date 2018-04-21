@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ten_thousand.silver_paving.dto.lkc.TbProdtypeMapper">
+    <resultMap id="TbProdtypeResultMap" type="com.ten_thousand.silver_paving.dto.lkc.TbProdtype">
+        <id property="prodtypeId" column="prodtype_id" javaType="java.lang.Integer"/>
+        <!--配置与interest一对一关系-->
+        <association property="interest"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbInterest"/>
+        <!--配置与date一对一关系-->
+        <association property="date"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbDate"/>
+        <!--配置与refund一对一关系-->
+        <association property="refund"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbRefund"/>
+        <!--配置与refund一对一关系-->
+        <association property="prodintr"  javaType="com.ten_thousand.silver_paving.dto.lkc.TbRefund"/>
+    </resultMap>
+    <!--增添sql-->
+    <insert id="save">
+      insert into tb_prodtype (inte_id,date_id,refund_id) values(#{inteId},#{dateId},#{refundId})
+    </insert>
+    <!--删除sql-->
+    <delete id="delete">
+      delete from tb_prodtype where prodtype_id=#{prodtypeId}
+    </delete>
+    <!--更新sql-->
+    <update id="update">
+      update tb_prodtype set inte_id=#{inteId},date_id=#{dateId},refund_id=#{refundId} where prodtype_id=#{prodtypeId}
+    </update>
+    <!--查询sql-->
+    <select id="queryAll" resultMap="TbProdtypeResultMap">
+      select prodtype_id,inte_id,date_id,refund_id from tb_prodtype
+    </select>
+    <!--根据产品类型Id查询具体信息-->
+    <select id="queryById" resultType="com.ten_thousand.silver_paving.dto.lkc.TbProdtype">
+        select prodtype_id,inte_id,date_id,refund_id from tb_prodtype where prodtype_id=#{prodtypeId}
+    </select>
+    <!--产品类型数量-->
+    <select id="queryCount" resultType="java.lang.Integer">
+        select count(prodtype_id) from tb_prodtype
+    </select>
+</mapper>

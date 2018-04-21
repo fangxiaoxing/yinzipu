@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+
+    <bean id="jobFactory" class="com.ten_thousand.silver_paving.util.MyJobFactory"></bean>
+    <!--
+        Spring整合Quartz进行配置遵循下面的步骤：
+        1：定义工作任务的Job
+        2：定义触发器Trigger，并将触发器与工作任务绑定
+        3：定义调度器，并将Trigger注册到Scheduler
+     -->
+    <!--1：定义工作任务的Job 这里使用JobDetailFactoryBean,也可以使用MethodInvokingJobDetailFactor-->
+    <!--我们通过-->
+    <bean name="quartzTest" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <!-- 指定job的名称 -->
+        <property name="name" value="quartzTest"/>
+        <!-- 指定job的分组 可以执行一组任务 -->
+        <property name="group" value="qTest_group"/>
+        <!-- 指定具体的job类,倒入的这个job是实际执行的方法 -->
+        <property name="jobClass" value="com.ten_thousand.silver_paving.dao.quartzDao.unlockQuartz"/>
+        <!-- 必须设置为true，如果为false，当没有活动的触发器与之关联时会在调度器中会删除该任务  -->
+        <property name="durability" value="true"/>
+        <!-- 指定spring容器的key，如果不设定在job中的jobmap中是获取不到spring容器的 -->
+        <property name="applicationContextJobDataKey" value="applicationContext"/>
+
+        <!--<property name="jobDataAsMap">-->
+        <!--<map>-->
+            <!--<entry key="unlockDao" value-ref="unlockDao"/>-->
+            <!--<entry key="investDao" value-ref="investDao"/>-->
+            <!--<entry key="timeout" value="5"/>-->
+        <!--</map>-->
+        <!--</property>-->
+
+    </bean>
+
+    <!--2：定义触发器Trigger，并将触发器与工作任务绑定-->
+    <!--<bean name="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">-->
+        <!--&lt;!&ndash; 指定Trigger的名称 &ndash;&gt;-->
+        <!--<property name="beanName" value="simpleTrigger"/>-->
+        <!--&lt;!&ndash; 指定Trigger的分组 &ndash;&gt;-->
+        <!--<property name="group" value="simpleGroupe"/>-->
+        <!--&lt;!&ndash; 指定Tirgger绑定的Job &ndash;&gt;-->
+        <!--<property name="jobDetail" ref="quartzTest"/>-->
+        <!--&lt;!&ndash;指定Trigger的延迟时间 1s后运行&ndash;&gt;-->
+        <!--<property name="startDelay" value="0"/>-->
+        <!--&lt;!&ndash;指定Trigger的重复间隔  5s&ndash;&gt;-->
+        <!--<property name="repeatInterval" value="1"/>-->
+        <!--&lt;!&ndash;指定Trigger的重复次数&ndash;&gt;-->
+        <!--<property name="repeatCount" value="0"/>-->
+    <!--</bean>-->
+
+     <!--2.2：定义触发器的bean，定义一个Cron的Trigger，一个触发器只能和一个任务进行绑定-->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!-- 指定Trigger的名称 -->
+        <property name="name" value="hw_trigger"/>
+        <!-- 指定Trigger的分组 -->
+        <property name="group" value="hw_trigger_group"/>
+        <!-- 指定Tirgger绑定的Job -->
+        <property name="jobDetail" ref="quartzTest"/>
+        <!-- 指定Cron 的表达式 ，当前是每隔1s运行一次 -->
+        <property name="cronExpression" value="0/120000 * * * * ?" />
+    </bean>
+
+
+    <!-- 3.定义调度器，并将Trigger注册到调度器中 -->
+    <bean name="stdScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobFactory" ref="jobFactory"/>
+        <property name="triggers" >
+            <list>
+                 <!--<ref bean="simpleTrigger"/>-->
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
+         <!--<property name="autoStartup" value="false" />-->
+    </bean>
+
+   <!--<bean name="quartzTest2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+       <!--&lt;!&ndash; 指定Trigger的名称 &ndash;&gt;-->
+       <!--<property name="beanName" value="simpleTrigger"/>-->
+       <!--&lt;!&ndash; 指定Trigger的分组 &ndash;&gt;-->
+       <!--<property name="group" value="simpleGroupe"/>-->
+
+       <!--<property name="targetObject" ref="unlockQuartz"/>-->
+
+       <!--<property name="targetMethod">-->
+           <!--<value>execute</value>-->
+       <!--</property>-->
+   <!--</bean>-->
+</beans>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ten_thousand.silver_paving.dto.orderMapper">
+
+    <!--sy结果集-->
+ <resultMap id="orderMapper" type="com.ten_thousand.silver_paving.dto.OrderDto">
+        <id property="orderId" column="order_id"/>
+        <result property="carId" column="car_id"/>
+        <result property="prodId" column="prod_id"/>
+        <result property="investorId" column="investor_id"/>
+        <result property="amountInvest" column="amount_invest"/>
+        <result property="orderState" column="order_state"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="orderNum" column="order_num"/>
+    </resultMap>
+    <!--sy结果集-->
+    
+
+<!--sy sql-->
+    <!--更新订单状态-->
+    <update id="updateOrderState">
+        UPDATE tb_order set order_state =#{state} WHERE order_id=#{orderId}
+    </update>
+
+    <!--新增订单-->
+    <insert id="addOrder" useGeneratedKeys="true" parameterType="com.shiyue.quartz.dto.OrderDto">
+        INSERT INTO tb_order(car_id,prod_id,investor_id,amount_invest,order_state,start_time,end_time,order_num)
+        VALUES (#{carId},#{prodId},#{investorId},#{amountInvest},#{orderState},#{startTime},#{endTime},#{orderNum})
+    </insert>
+    
+    <select id="queryOneOrderById" resultMap="orderMapper">
+        SELECT order_id,car_id,prod_id,investor_id,amount_invest,order_state,start_time,end_time,order_num FROM tb_order WHERE order_id =#{orderId}
+    </select>
+
+    <select id="queryRealTimeOrder" resultMap="orderMapper">
+        SELECT order_id,car_id,prod_id,investor_id,amount_invest,order_state,start_time,end_time,order_num FROM tb_order WHERE start_time>=#{startTime} AND order_state ='0'
+    </select>
+
+    <select id="queryOrderByOrderNum" resultMap="orderMapper">
+        SELECT order_id,car_id,prod_id,investor_id,amount_invest,order_state,start_time,end_time,order_num FROM tb_order WHERE order_num =#{orderNum}
+    </select>
+    <!--sy sql-->
+
+
+</mapper>

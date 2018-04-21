@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ten_thousand.silver_paving.dto.lkc.TbBorrowerMapper">
+    <resultMap id="TbBorrowerResultMap" type="com.ten_thousand.silver_paving.dto.lkc.TbBorrower">
+        <id property="borrId" column="borr_id" javaType="java.lang.Integer"/>
+        <result property="borrName" column="borr_name" javaType="java.lang.String"/>
+        <result property="borrIdCard" column="borr_IDCard" javaType="java.lang.String"/>
+        <result property="borrCompany" column="borr_company" javaType="java.lang.String"/>
+        <result property="borrCompCode" column="borr_comp_code" javaType="java.lang.String"/>
+        <result property="borrImg1" column="borr_img1" javaType="java.lang.String"/>
+        <result property="borrImg2" column="borr_img2" javaType="java.lang.String"/>
+        <result property="borrImg3" column="borr_img3" javaType="java.lang.String"/>
+        <result property="borrImg4" column="borr_img4" javaType="java.lang.String"/>
+        <result property="borrImg5" column="borr_img5" javaType="java.lang.String"/>
+        <result property="borrImg6" column="borr_img6" javaType="java.lang.String"/>
+        <result property="borrImg7" column="borr_img7" javaType="java.lang.String"/>
+        <result property="borrImg8" column="borr_img8" javaType="java.lang.String"/>
+        <result property="borrImg9" column="borr_img9" javaType="java.lang.String"/>
+        <result property="carId" column="car_id" javaType="java.lang.Integer"/>
+        <result property="dateId" column="date_id" javaType="java.lang.Integer"/>
+        <result property="borrBegin" column="borr_begin" javaType="java.sql.Timestamp"/>
+        <result property="borrEnd" column="borr_end" javaType="java.sql.Timestamp"/>
+    </resultMap>
+
+    <!--sql添加语句-->
+    <insert id="save">
+        insert into tb_borrower(borr_name,borr_IDCard,borr_company,borr_comp_code,borr_img1
+        ,borr_img2,borr_img3,borr_img4,borr_img5,borr_img6,borr_img7,borr_img8,borr_img9,car_id,date_id
+        ,borr_begin,borr_end)
+        values(#{borrName},#{borrIdCard},#{borrCompany},#{borrCompCode},#{borrImg1},#{borrImg2},#{borrImg3},#{borrImg4},
+        #{borrImg5},#{borrImg6},#{borrImg7},#{borrImg8},#{borrImg9},#{carId},#{dateId},#{borrBegin},#{borrEnd})
+    </insert>
+    <!--sql删除语句-->
+    <delete id="delete">
+        delete from tb_borrower where borr_id=#{borrId}
+    </delete>
+    <!--sql更新语句-->
+    <update id="update" >
+        update tb_borrower set borr_name=#{borrName},borr_IDCard=#{borrIdCard},borr_company=#{borrCompany},borr_comp_code=#{borrCompCode},borr_img1=#{borrImg1},
+        borr_img2=#{borrImg2},borr_img3=#{borrImg3},borr_img4=#{borrImg4},borr_img5=#{borrImg5},borr_img6=#{borrImg6},borr_img7=#{borrImg7},borr_img8=#{borrImg8},
+        borr_img9=#{borrImg9},car_id=#{carId},date_id=#{dateId},borr_begin=#{borrBegin},borr_end=#{borrEnd}
+        where corr_id=#{corrId}
+    </update>
+    <!--sql查询语句-->
+    <!--全查-->
+    <select id="queryAll" resultMap="TbBorrowerResultMap">
+        select borr_name,borr_IDCard,borr_company,borr_comp_code,borr_img1
+        ,borr_img2,borr_img3,borr_img4,borr_img5,borr_img6,borr_img7,borr_img8,borr_img9,car_id,date_id
+        ,borr_begin,borr_end from tb_borrower
+    </select>
+    <!--根据贷款人Id查询具体信息-->
+    <select id="queryById" resultType="com.ten_thousand.silver_paving.dto.lkc.TbBorrower">
+        select borr_name,borr_IDCard,borr_company,borr_comp_code,borr_img1
+        ,borr_img2,borr_img3,borr_img4,borr_img5,borr_img6,borr_img7,borr_img8,borr_img9,car_id,date_id
+        ,borr_begin,borr_end from tb_borrower where borr_id=#{borrId}
+    </select>
+    <!--借款人总数-->
+    <select id="queryCount" resultType="java.lang.Integer">
+        select count(borr_id) from tb_borrower
+    </select>
+</mapper>
