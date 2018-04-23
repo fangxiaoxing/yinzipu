@@ -11,7 +11,7 @@ public class startTest implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("启动");
-        ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:spring-core.xml");
+        ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
         StdScheduler stdScheduler = (StdScheduler) classPathXmlApplicationContext.getBean("stdScheduler");
         try {
             stdScheduler.start();
